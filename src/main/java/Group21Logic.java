@@ -26,6 +26,22 @@ public class Group21Logic implements IQueensLogic {
         return board;
     }
 
+    public void updateBoard(){
+        for(int i = 0; i < size; i++){
+            for(int j = 0; j < size; j++){
+                if(board[i][j] == 0 && testInsertQueen(i,j)){
+                    board[i][j] = -1;
+                }
+            }
+        }
+    }
+
+    public boolean testInsertQueen(int column, int row){
+        BDD curbdd = bdd;
+        int bddID = getVarId(column, row);
+        return (fact.ithVar(bddId).and(curbdd)).isZero();
+    }
+
     public void insertQueen(int column, int row) {
         int bddId = getVarId(column, row);
 
