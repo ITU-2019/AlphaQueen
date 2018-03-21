@@ -1,0 +1,39 @@
+group 'com.itu'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile files('libs/javabdd-1.0b2.jar')
+}
+
+test {
+    testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+    }
+}
+
+task copyDocs(type: Copy) {
+    from 'src/main/java/imgs'
+    into 'build/classes/java/main/imgs'
+}
+task copyDocs2(type: Copy) {
+    from 'src/main/java/imgs'
+    into 'imgs'
+}
+
+task run(dependsOn: [build], type: JavaExec) {
+    main = 'Queens'
+    classpath = sourceSets.main.runtimeClasspath
+    args 'PrimitiveLogic', '6'
+}
+
+build.finalizedBy(copyDocs)
+build.finalizedBy(copyDocs2)
