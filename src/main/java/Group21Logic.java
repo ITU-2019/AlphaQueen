@@ -12,6 +12,7 @@ public class Group21Logic implements IQueensLogic {
     private int[][] board;	// Content of the board. Possible values: 0 (empty), 1 (queen), -1 (no queen allowed)
 
     BDDFactory fact;
+    BDD bdd;
 
     public void initializeBoard(int size) {
         this.size = size;
@@ -47,7 +48,6 @@ public class Group21Logic implements IQueensLogic {
             BDD x2 = fact.ithVar(invalidBdd).and(x1);
             System.out.println(x2.isZero());
 
-            board[pos[0]][pos[1]] = -1;
         }
 
         fact.printAll();
