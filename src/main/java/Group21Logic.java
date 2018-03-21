@@ -12,7 +12,7 @@ public class Group21Logic implements IQueensLogic {
     private int[][] board;	// Content of the board. Possible values: 0 (empty), 1 (queen), -1 (no queen allowed)
 
     BDDFactory fact;
-    BDD bdd;
+    BDD bdd = null;
 
     public void initializeBoard(int size) {
         this.size = size;
@@ -27,29 +27,35 @@ public class Group21Logic implements IQueensLogic {
     }
 
     public void insertQueen(int column, int row) {
-        board[column][row] = 1;
+        int bddId = getVarId(column, row);
 
         System.out.println(column + " - " + row);
-        int bddId = getVarId(column, row);
         System.out.println(bddId);
-
-
         System.out.println("-----");
+
         // Place qeen
+
+        if(board[column][row] == -1) {
+            return;
+        }
+        board[column][row] = 1;
+
         ArrayList<int[]> positions = getInvalidPos(column, row);
-        if (positions.size() != 0) {
-            int[] pos = positions.get(0);
-            System.out.println(pos[0] + " - " + pos[1]);
-            int invalidBdd = getVarId(pos[0], pos[1]);
-
-            BDD x1 = fact.ithVar(bddId).and(fact.nithVar(invalidBdd));
-            System.out.println(x1.isZero());
-            // Place new queen
-            BDD x2 = fact.ithVar(invalidBdd).and(x1);
-            System.out.println(x2.isZero());
-
+        if (bdd == null) {
+            bdd = fact.ithVar(bddId);
+        } else {
+            bdd = bdd.and(fact.ithVar(bddId));
         }
 
+        if (positions.size() != 0) {
+            int[] pos = positions.get(0);
+            int invalidBdd = getVarId(pos[0], pos[1]);
+            System.out.println(pos[0] + " - " + pos[1]);
+
+            bdd = bdd.and(fact.nithVar(invalidBdd));
+        }
+
+        System.out.println(bdd.isZero());
         fact.printAll();
     }
 
