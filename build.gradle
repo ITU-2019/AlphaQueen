@@ -32,7 +32,7 @@ task copyDocs2(type: Copy) {
 task run(dependsOn: [build], type: JavaExec) {
     main = 'Queens'
     classpath = sourceSets.main.runtimeClasspath
-    args 'PrimitiveLogic', '6'
+    args 'Group21Logic', '2'
 }
 
 build.finalizedBy(copyDocs)

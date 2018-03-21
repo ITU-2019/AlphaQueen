@@ -12,7 +12,7 @@ import javax.swing.*;
 public class Queens {
 
 	/**
-     * Valid arguments: Logic size 
+     * Valid arguments: Logic size
      * Standard values for size (length of square board) is 8. Should be greater than 4
      */
 	public static void main(String[] args) {
@@ -21,7 +21,7 @@ public class Queens {
 
 		int size = 8;
         IQueensLogic logic = null;
-        
+
 		if (args.length >= 1 ){
         	try {
                 logic = parseLogicParam(args[0]);
@@ -41,16 +41,16 @@ public class Queens {
                 errMsg = "Your Logic constructor threw an exception: " + ite.toString();
                 err = true;
             }
-        
+
         	if ( args.length >= 2 ){
         		try {
         			size = Integer.parseInt(args[1]);
-        	
-        			if ( size <= 4 ){
-        				errMsg = "Board size should be greater than 4";
-        				err = true;
-        			}
-        	
+
+        			// if ( size <= 4 ){
+        			// 	errMsg = "Board size should be greater than 4";
+        			// 	err = true;
+        			// }
+
         		}
         		catch(NumberFormatException nfe) {
         			errMsg = "Could not parse size value: " + args[1];
@@ -82,7 +82,7 @@ public class Queens {
 	       	err = true;
 	    }
 	}
-	
+
     /**
      * Printing error and help-message
      */
@@ -92,15 +92,15 @@ public class Queens {
     	System.err.println("\tQueensLogic\t\t- specifies a class implementing IQueensLogic");
     	System.err.println("\tsize\t\t - Must be an integer greater or equal to 5. Defaults to 8.");
     }
-    
+
     /**
      * Returns an instance of the specified class implementing IQueensLogic
      * @param cmdParam String from the command line that should be a path to a java class implementing IQueensLogic
      */
-    public static IQueensLogic parseLogicParam(String cmdParam) 
-            throws ClassNotFoundException, NoSuchMethodException, 
+    public static IQueensLogic parseLogicParam(String cmdParam)
+            throws ClassNotFoundException, NoSuchMethodException,
                    InstantiationException, IllegalAccessException,
-                   InvocationTargetException {    	
+                   InvocationTargetException {
     	return (IQueensLogic)Class.forName(cmdParam).getConstructor().newInstance();
     }
 }
