@@ -8,7 +8,6 @@ class BddQueenUtils {
         this.size = size;
         this.fact = JFactory.init(1000000,100000);
         fact.setVarNum(size*size);
-        fact.printAll();
     }
     public boolean testInsertQueen(int column, int row, BDD curbdd){
         return (placeQueen(column, row, curbdd)).isZero();
@@ -84,5 +83,8 @@ class BddQueenUtils {
             }
         }
         return pos;
+    }
+    public int getSize(){
+        return size;
     }
 }
