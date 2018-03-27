@@ -89,4 +89,12 @@ public class BDDQueenUtilsTest{
         BDDQueenUtils bqu = new BDDQueenUtils(8);
         assertEquals(3*8 + 2,bqu.getVarId(2,3));
     }
+
+    @Test
+    public void getVarIdFromColumndID() {
+        BDDQueenUtils bqu = new BDDQueenUtils(8);
+        int[] a = bqu.getCollumnRowFromVarId(10);
+
+        assertEquals(bqu.getVarId(2,1),bqu.getVarId(a[0], a[1]));
+    }
 }
