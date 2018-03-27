@@ -1,21 +1,20 @@
 import net.sf.javabdd.*;
-import java.util.*;
 
 /**
- *
- * @author
- * @version
+ * @author Group 21
  */
 
 public class Group21Logic implements IQueensLogic {
-    private int size;		// Size of quadratic game board (i.e. size = #rows = #columns)
-    private int[][] board;	// Content of the board. Possible values: 0 (empty), 1 (queen), -1 (no queen allowed)
+    private int size;	
+
+    // Content of the board. Possible values: 0 (empty), 1 (queen), -1 (no queen allowed)
+    private int[][] board;
 
     private BDD bdd = null;
-    private BddQueenUtils bd;
+    private BDDQueenUtils bd;
 
     public void initializeBoard(int size) {
-        bd = new BddQueenUtils(size);
+        bd = new BDDQueenUtils(size);
         this.size = size;
         this.board = new int[size][size];
 
@@ -37,7 +36,8 @@ public class Group21Logic implements IQueensLogic {
     public void updateBoard(){
         for(int i = 0; i < size; i++){
             for(int j = 0; j < size; j++){
-                if(board[i][j] == 0 && bd.testInsertQueen(i,j,bdd)){
+                if(     board[i][j] == 0 
+                    &&  bd.testInsertQueen(i,j,bdd)){
                     board[i][j] = -1;
                 }
             }

@@ -1,16 +1,16 @@
 import net.sf.javabdd.*;
 import java.util.*;
 
-class BddQueenUtils {
+class BDDQueenUtils {
     private BDDFactory fact;
     private int size;
-    public BddQueenUtils(int size){
+    public BDDQueenUtils(int size){
         this.size = size;
         this.fact = JFactory.init(1000000,100000);
         fact.setVarNum(size*size);
     }
     public boolean testInsertQueen(int column, int row, BDD curbdd){
-        return (placeQueen(column, row, curbdd)).isZero();
+        return placeQueen(column, row, curbdd).isZero();
     }
     public BDD placeQueen(int column, int row, BDD curBDD) {
         int bddId = getVarId(column, row);
