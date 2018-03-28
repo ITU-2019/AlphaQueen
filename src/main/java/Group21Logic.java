@@ -36,6 +36,9 @@ public class Group21Logic implements IQueensLogic {
         for(int i = 0; i < size*size; i++){
             avialablePositions.add(i);
         }
+        if(size == 6){
+            updateBoard(new HashSet<>());
+        }
     }
 
     
