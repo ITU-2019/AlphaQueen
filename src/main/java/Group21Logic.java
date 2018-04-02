@@ -75,7 +75,7 @@ public class Group21Logic implements IQueensLogic {
             Set<Integer> availablePositionsCopy = new HashSet<>();
             availablePositionsCopy.addAll(availablePositions);
             availablePositionsCopy.remove(i);
-            if(! bd.testInsertQueen(i, bdd, (size-numberOfQueens) -1, availablePositionsCopy , 0)){
+            if(! bd.testInsertQueen(i, bdd, (size-numberOfQueens) -1, availablePositionsCopy)){
                 int[] colrow = bd.getCollumnRowFromVarId(i);
                 board[colrow[0]][colrow[1]] = -1;
             } else {
