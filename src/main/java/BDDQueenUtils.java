@@ -1,58 +1,60 @@
 import net.sf.javabdd.*;
-
 import java.util.*;
-
 
 class BDDQueenUtils {
     private BDDFactory fact;
     private int size;
     public BDDQueenUtils(int size){
         this.size = size;
-        this.fact = JFactory.init(1000000,100000);
-        fact.setVarNum(size*size);
+        this.fact = JFactory.init(1000000, 100000); // Magic numbers
+        fact.setVarNum(size * size); // Need variables for each place on board
     }
 
-    // returns true if the varId is imposible to put a queen in.
-    public boolean testInsertQueen(int varId, BDD curbdd, int missingQueens, Set<Integer> availablePositions, int depth){
-        if( ! placeQueen(varId, curbdd, availablePositions).isZero()) {
-            if (missingQueens == 0) return false;
-            if (missingQueens > availablePositions.size()) return true;
-            //System.out.println("varid: " + varId + " \t depth: " + depth + " \t Missing Queens:  " + missingQueens + " \t availablePositions: " + availablePositions );
-            for(int i : availablePositions){
-                Set<Integer> availablePositionsCopy = new HashSet<>();
-                availablePositionsCopy.addAll(availablePositions);
-                availablePositionsCopy.remove(i);
-                if (! testInsertQueen(i, curbdd, missingQueens - 1, availablePositionsCopy, depth+1)) return false;
-            }
-            return true;
-            
-        } else {
-            return false;
-        } 
+    /**
+     * Try to evaluate the board, to determine if the game is win-able, with the given parameters.
+     * @param  varId              The position to place a queen
+     * @param  curbdd             The current bdd of the board
+     * @param  missingQueens      The number of queens that needs to be placed
+     * @param  availablePositions The available positions where a queen could be placed
+     * @return                    Returns true if the game is win-able otherwise return false
+     */
+    public boolean testInsertQueen(int varId, BDD curbdd, int missingQueens, Set<Integer> avialablePositions) {
+        if (missingQueens == 0) return true; // Check if all queens are placed
+        placeQueen(varId, curbdd, avialablePositions);
+
+        // Un-satisfiability if we need to place more queens than there is available positions
+        if (missingQueens > avialablePositions.size()) return false;
+
+        for (int i : avialablePositions) {
+            Set<Integer> avialablePositionsCopy = new HashSet<>(avialablePositions);
+            avialablePositionsCopy.remove(i);
+            if (testInsertQueen(i, curbdd, missingQueens - 1, avialablePositionsCopy)) return true;
+        }
+
+        return false;
     }
 
-    public BDD placeQueen(int varId, BDD curBDD, Set<Integer> availablePositions) {
-        availablePositions.remove(varId);
+    public BDD placeQueen(int varId, BDD curBDD, Set<Integer> avialablePositions) {
+        avialablePositions.remove(varId);
         if (curBDD == null) {
             curBDD = fact.ithVar(varId);
         } else {
             curBDD = curBDD.and(fact.ithVar(varId));
         }
-        // add invalids
-        curBDD = placeInvalid(varId,curBDD, availablePositions);
+        // Add invalids
+        curBDD = placeInvalid(varId,curBDD, avialablePositions);
         return curBDD;
     }
 
-    public BDD placeInvalid(int varId, BDD curBDD, Set<Integer> availablePositions) {
+    public BDD placeInvalid(int varId, BDD curBDD, Set<Integer> avialablePositions) {
         int[] colrow = getCollumnRowFromVarId(varId);
         ArrayList<Integer> positions = getInvalidPos(colrow[0], colrow[1]);
 
         for (int i : positions){
-            availablePositions.remove(i);
+            avialablePositions.remove(i);
             curBDD = curBDD.and(fact.nithVar(i));
         }
-            
-        
+
         return curBDD;
     }
 
@@ -71,7 +73,7 @@ class BDDQueenUtils {
 
         ArrayList<Integer> posIdArray = new ArrayList<>();
         for(int[] ia: pos) posIdArray.add(getVarId(ia[0], ia[1]));
-        
+
         return posIdArray;
     }
     public ArrayList<int[]> getVerticals(int column, int row) {

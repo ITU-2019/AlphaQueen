@@ -10,9 +10,7 @@ import net.sf.javabdd.*;
 public class Group21Logic implements IQueensLogic {
     // Board Size
     private int size;
-
     private int numberOfQueens;
-
     // Content of the board. Possible values: 0 (empty), 1 (queen), -1 (no queen allowed)
     private int[][] board;
 
@@ -41,7 +39,7 @@ public class Group21Logic implements IQueensLogic {
         }
     }
 
-    
+
     public void insertQueen(int column, int row) {
         // If the field is available (aka == 0) then place.
         if(board[column][row] == 0) {
@@ -62,22 +60,22 @@ public class Group21Logic implements IQueensLogic {
             }
         }
     }
-    
+
     public void updateBoard(HashSet<Integer> oldAvailablePositions){
-        
+
         // REMOVE OBVIOUS FIELDS.
         oldAvailablePositions.removeAll(availablePositions);
         for(int i : oldAvailablePositions){
             int[] colrow = bd.getCollumnRowFromVarId(i);
             board[colrow[0]][colrow[1]] = -1;
         }
-        
+
         HashSet<Integer> newavailablePositions = new HashSet<>();
         for (int i : availablePositions){
             Set<Integer> availablePositionsCopy = new HashSet<>();
             availablePositionsCopy.addAll(availablePositions);
             availablePositionsCopy.remove(i);
-            if(bd.testInsertQueen(i, bdd, (size-numberOfQueens) -1, availablePositionsCopy , 0)){
+            if(! bd.testInsertQueen(i, bdd, (size-numberOfQueens) -1, availablePositionsCopy , 0)){
                 int[] colrow = bd.getCollumnRowFromVarId(i);
                 board[colrow[0]][colrow[1]] = -1;
             } else {
@@ -88,14 +86,14 @@ public class Group21Logic implements IQueensLogic {
     }
 
     /* GETTERS ! */
-    
-    public Set<Integer> getAvailablePositionsCopy(){
+
+    public Set<Integer> getAvailablePositionsCopy() {
         Set<Integer> availablePositionsCopy = new HashSet<>();
         availablePositionsCopy.addAll(availablePositions);
         return availablePositionsCopy;
     }
-    
-    public int getNumberOfQueens(){
+
+    public int getNumberOfQueens() {
         return numberOfQueens;
     }
 
