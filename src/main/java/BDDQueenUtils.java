@@ -90,7 +90,7 @@ class BDDQueenUtils {
     /**
      * Get the column and row based on variable id.
      * @param  varId The variable id
-     * @return       [column, row] on the board
+     * @return       The [column, row] on the board
      */
     public int[] getCollumnRowFromVarId(int varId){
         return new int[]{varId % size, varId / size};
