@@ -22,7 +22,7 @@ public class Group21Logic implements IQueensLogic {
     private BDDQueenUtils bd;
 
     /**
-     *
+     * Initialize game board.
      * @param
      */
     public void initializeBoard(int size) {
