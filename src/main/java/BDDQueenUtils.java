@@ -13,16 +13,16 @@ class BDDQueenUtils {
     }
 
     // returns true if the varId is imposible to put a queen in.
-    public boolean testInsertQueen(int varId, BDD curbdd, int missingQueens, Set<Integer> avialablePositions, int depth){
-        if( ! placeQueen(varId, curbdd, avialablePositions).isZero()) {
+    public boolean testInsertQueen(int varId, BDD curbdd, int missingQueens, Set<Integer> availablePositions, int depth){
+        if( ! placeQueen(varId, curbdd, availablePositions).isZero()) {
             if (missingQueens == 0) return false;
-            if (missingQueens > avialablePositions.size()) return true;
-            //System.out.println("varid: " + varId + " \t depth: " + depth + " \t Missing Queens:  " + missingQueens + " \t availablePositions: " + avialablePositions );
-            for(int i : avialablePositions){
-                Set<Integer> avialablePositionsCopy = new HashSet<>();
-                avialablePositionsCopy.addAll(avialablePositions);
-                avialablePositionsCopy.remove(i);
-                if (! testInsertQueen(i, curbdd, missingQueens - 1, avialablePositionsCopy, depth+1)) return false;
+            if (missingQueens > availablePositions.size()) return true;
+            //System.out.println("varid: " + varId + " \t depth: " + depth + " \t Missing Queens:  " + missingQueens + " \t availablePositions: " + availablePositions );
+            for(int i : availablePositions){
+                Set<Integer> availablePositionsCopy = new HashSet<>();
+                availablePositionsCopy.addAll(availablePositions);
+                availablePositionsCopy.remove(i);
+                if (! testInsertQueen(i, curbdd, missingQueens - 1, availablePositionsCopy, depth+1)) return false;
             }
             return true;
             
@@ -31,24 +31,24 @@ class BDDQueenUtils {
         } 
     }
 
-    public BDD placeQueen(int varId, BDD curBDD, Set<Integer> avialablePositions) {
-        avialablePositions.remove(varId);
+    public BDD placeQueen(int varId, BDD curBDD, Set<Integer> availablePositions) {
+        availablePositions.remove(varId);
         if (curBDD == null) {
             curBDD = fact.ithVar(varId);
         } else {
             curBDD = curBDD.and(fact.ithVar(varId));
         }
         // add invalids
-        curBDD = placeInvalid(varId,curBDD, avialablePositions);
+        curBDD = placeInvalid(varId,curBDD, availablePositions);
         return curBDD;
     }
 
-    public BDD placeInvalid(int varId, BDD curBDD, Set<Integer> avialablePositions) {
+    public BDD placeInvalid(int varId, BDD curBDD, Set<Integer> availablePositions) {
         int[] colrow = getCollumnRowFromVarId(varId);
         ArrayList<Integer> positions = getInvalidPos(colrow[0], colrow[1]);
 
         for (int i : positions){
-            avialablePositions.remove(i);
+            availablePositions.remove(i);
             curBDD = curBDD.and(fact.nithVar(i));
         }
             

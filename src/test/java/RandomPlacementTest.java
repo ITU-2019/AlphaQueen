@@ -63,7 +63,7 @@ public class RandomPlacementTest{
     @Test
     public void RandomPlacement9() {
         for(int i = 0; i < 10; i++){
-            testRandomPlacement(8);
+            testRandomPlacement(9);
         }
     }
 

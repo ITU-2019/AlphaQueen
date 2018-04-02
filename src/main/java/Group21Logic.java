@@ -18,7 +18,7 @@ public class Group21Logic implements IQueensLogic {
 
     // Set containing only the positions on the board that is empty.
     // The integer is the Id, for each field on the board.
-    private HashSet<Integer> avialablePositions;
+    private HashSet<Integer> availablePositions;
 
     // Current bdd status.
     private BDD bdd = null;
@@ -32,9 +32,9 @@ public class Group21Logic implements IQueensLogic {
         this.size = size;
         this.numberOfQueens = 0;
         this.board = new int[size][size];
-        this.avialablePositions = new HashSet<Integer>();
+        this.availablePositions = new HashSet<Integer>();
         for(int i = 0; i < size*size; i++){
-            avialablePositions.add(i);
+            availablePositions.add(i);
         }
         if(size == 6){
             updateBoard(new HashSet<>());
@@ -47,13 +47,13 @@ public class Group21Logic implements IQueensLogic {
         if(board[column][row] == 0) {
             board[column][row] = 1;                      // place the queen
             HashSet<Integer> oldAvailablePositions = new HashSet<>();
-            oldAvailablePositions.addAll(avialablePositions);
-            bdd = bd.placeQueen(bd.getVarId(column, row), bdd, avialablePositions);       // Add queen to BDD
+            oldAvailablePositions.addAll(availablePositions);
+            bdd = bd.placeQueen(bd.getVarId(column, row), bdd, availablePositions);       // Add queen to BDD
             numberOfQueens++;
             oldAvailablePositions.remove(bd.getVarId(column, row));
             updateBoard(oldAvailablePositions);
-            if(size - numberOfQueens == avialablePositions.size()){
-                for(int i : avialablePositions){
+            if(size - numberOfQueens == availablePositions.size()){
+                for(int i : availablePositions){
                     int col1 = i % size;
                     int row1 = i / size;
                     board[col1][row1] = 1;
@@ -66,35 +66,33 @@ public class Group21Logic implements IQueensLogic {
     public void updateBoard(HashSet<Integer> oldAvailablePositions){
         
         // REMOVE OBVIOUS FIELDS.
-        oldAvailablePositions.removeAll(avialablePositions);
+        oldAvailablePositions.removeAll(availablePositions);
         for(int i : oldAvailablePositions){
             int[] colrow = bd.getCollumnRowFromVarId(i);
-           // if(board[colrow[0]][colrow[1]] != 1){
-                board[colrow[0]][colrow[1]] = -1;
-            //}
+            board[colrow[0]][colrow[1]] = -1;
         }
         
-        HashSet<Integer> newAvialablePositions = new HashSet<>();
-        for (int i : avialablePositions){
-            Set<Integer> avialablePositionsCopy = new HashSet<>();
-            avialablePositionsCopy.addAll(avialablePositions);
-            avialablePositionsCopy.remove(i);
-            if(bd.testInsertQueen(i, bdd, (size-numberOfQueens) -1, avialablePositionsCopy , 0)){
+        HashSet<Integer> newavailablePositions = new HashSet<>();
+        for (int i : availablePositions){
+            Set<Integer> availablePositionsCopy = new HashSet<>();
+            availablePositionsCopy.addAll(availablePositions);
+            availablePositionsCopy.remove(i);
+            if(bd.testInsertQueen(i, bdd, (size-numberOfQueens) -1, availablePositionsCopy , 0)){
                 int[] colrow = bd.getCollumnRowFromVarId(i);
                 board[colrow[0]][colrow[1]] = -1;
             } else {
-                newAvialablePositions.add(i);
+                newavailablePositions.add(i);
             }
         }
-        avialablePositions = newAvialablePositions;
+        availablePositions = newavailablePositions;
     }
 
     /* GETTERS ! */
     
     public Set<Integer> getAvailablePositionsCopy(){
-        Set<Integer> avialablePositionsCopy = new HashSet<>();
-        avialablePositionsCopy.addAll(avialablePositions);
-        return avialablePositionsCopy;
+        Set<Integer> availablePositionsCopy = new HashSet<>();
+        availablePositionsCopy.addAll(availablePositions);
+        return availablePositionsCopy;
     }
     
     public int getNumberOfQueens(){
