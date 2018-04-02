@@ -1,6 +1,10 @@
 import net.sf.javabdd.*;
 import java.util.*;
 
+/**
+ * N-queen logic utilities implementation.
+ * @author Group 21
+ */
 class BDDQueenUtils {
     private BDDFactory fact;
     private int size;
