@@ -4,27 +4,27 @@ import java.util.Set;
 import net.sf.javabdd.*;
 
 /**
+ * N-queen logic implementation.
  * @author Group 21
  */
-
 public class Group21Logic implements IQueensLogic {
     // Board Size
     private int size;
     private int numberOfQueens;
     // Content of the board. Possible values: 0 (empty), 1 (queen), -1 (no queen allowed)
     private int[][] board;
-
     // Set containing only the positions on the board that is empty.
     // The integer is the Id, for each field on the board.
     private HashSet<Integer> availablePositions;
-
     // Current bdd status.
     private BDD bdd = null;
-
     // Utility class mainly constructing new BDDs.
     private BDDQueenUtils bd;
 
-
+    /**
+     *
+     * @param
+     */
     public void initializeBoard(int size) {
         bd = new BDDQueenUtils(size);
         this.size = size;
@@ -39,7 +39,10 @@ public class Group21Logic implements IQueensLogic {
         }
     }
 
-
+    /**
+     *
+     * @param
+     */
     public void insertQueen(int column, int row) {
         // If the field is available (aka == 0) then place.
         if(board[column][row] == 0) {
@@ -61,6 +64,10 @@ public class Group21Logic implements IQueensLogic {
         }
     }
 
+    /**
+     *
+     * @param
+     */
     public void updateBoard(HashSet<Integer> oldAvailablePositions){
 
         // REMOVE OBVIOUS FIELDS.
@@ -85,18 +92,28 @@ public class Group21Logic implements IQueensLogic {
         availablePositions = newavailablePositions;
     }
 
-    /* GETTERS ! */
-
+    /**
+     *
+     * @param
+     */
     public Set<Integer> getAvailablePositionsCopy() {
         Set<Integer> availablePositionsCopy = new HashSet<>();
         availablePositionsCopy.addAll(availablePositions);
         return availablePositionsCopy;
     }
 
+    /**
+     *
+     * @param
+     */
     public int getNumberOfQueens() {
         return numberOfQueens;
     }
 
+    /**
+     *
+     * @param
+     */
     public int[][] getBoard() {
         return board;
     }

@@ -4,6 +4,11 @@ import java.util.*;
 class BDDQueenUtils {
     private BDDFactory fact;
     private int size;
+
+    /**
+     * Constructor.
+     * @param size The board size
+     */
     public BDDQueenUtils(int size){
         this.size = size;
         this.fact = JFactory.init(1000000, 100000); // Magic numbers
@@ -34,6 +39,13 @@ class BDDQueenUtils {
         return false;
     }
 
+    /**
+     * Place queen in bdd.
+     * @param  varId              The position to place a queen
+     * @param  curBDD             The current bdd of the board
+     * @param  availablePositions The available positions where a queen could be placed
+     * @return                    The new bdd state
+     */
     public BDD placeQueen(int varId, BDD curBDD, Set<Integer> availablePositions) {
         availablePositions.remove(varId);
         if (curBDD == null) {
@@ -42,10 +54,17 @@ class BDDQueenUtils {
             curBDD = curBDD.and(fact.ithVar(varId));
         }
         // Add invalids
-        curBDD = placeInvalid(varId,curBDD, availablePositions);
+        curBDD = placeInvalid(varId, curBDD, availablePositions);
         return curBDD;
     }
 
+    /**
+     * Mark invalid positions on the board.
+     * @param  varId              The position to place
+     * @param  curBDD             The current bdd state
+     * @param  availablePositions The available positions to place queens
+     * @return                    The new bdd state
+     */
     public BDD placeInvalid(int varId, BDD curBDD, Set<Integer> availablePositions) {
         int[] colrow = getCollumnRowFromVarId(varId);
         ArrayList<Integer> positions = getInvalidPos(colrow[0], colrow[1]);
@@ -58,13 +77,31 @@ class BDDQueenUtils {
         return curBDD;
     }
 
+    /**
+     * Get the variable id based on column and row.
+     * @param  column Column position on board
+     * @param  row    Row position on board
+     * @return        The variable id in bdd on the board
+     */
     public int getVarId(int column, int row) {
         return (row * size) + column;
     }
+
+    /**
+     * Get the column and row based on variable id.
+     * @param  varId The variable id
+     * @return       [column, row] on the board
+     */
     public int[] getCollumnRowFromVarId(int varId){
         return new int[]{varId % size, varId / size};
     }
 
+    /**
+     * Get invalid positions based on queens possible moves.
+     * @param  column Column position on board
+     * @param  row    Row position on board
+     * @return        ArrayList of invalid [column, row] positions on the board
+     */
     public ArrayList<Integer> getInvalidPos(int column, int row) {
         ArrayList<int[]> pos = new ArrayList<>();
         pos.addAll(getVerticals(column,row));
@@ -76,6 +113,13 @@ class BDDQueenUtils {
 
         return posIdArray;
     }
+
+    /**
+     * Get the vertical positions from given placement on board.
+     * @param  column Column position on board
+     * @param  row    Row position on board
+     * @return        ArrayList of invalid [column, row] positions on the board
+     */
     public ArrayList<int[]> getVerticals(int column, int row) {
         ArrayList<int[]> pos = new ArrayList<>();
         for(int i = 0; i < size; i++){
@@ -83,6 +127,13 @@ class BDDQueenUtils {
         }
         return pos;
     }
+
+    /**
+     * Get the horizontal positions from given placement on board.
+     * @param  column Column position on board
+     * @param  row    Row position on board
+     * @return        ArrayList of invalid [column, row] positions on the board
+     */
     public ArrayList<int[]> getHorizontals(int column, int row) {
         ArrayList<int[]> pos = new ArrayList<>();
         for(int i = 0; i < size; i++){
@@ -90,6 +141,13 @@ class BDDQueenUtils {
         }
         return pos;
     }
+
+    /**
+     * Get the diagonal positions from given placement on board.
+     * @param  column Column position on board
+     * @param  row    Row position on board
+     * @return        ArrayList of invalid [column, row] positions on the board
+     */
     public ArrayList<int[]> getDiagonals(int column, int row) {
         ArrayList<int[]> pos = new ArrayList<>();
         for(int i = 1; i < size; i++) {
@@ -113,6 +171,11 @@ class BDDQueenUtils {
         }
         return pos;
     }
+
+    /**
+     * Get size of board.
+     * @return The vertical/horizontal size of the board
+     */
     public int getSize(){
         return size;
     }
