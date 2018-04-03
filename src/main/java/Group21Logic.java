@@ -142,21 +142,28 @@ class BDDQueenUtils {
         this.size = size;
         this.fact = JFactory.init(1000000 * size * 2, 100000 * size * 2); // Magic numbers
         fact.setVarNum(size * size); // Need variables for each place on board
-        generateRestrictionBDD();
+        restictionBDD = generateRestrictionBDD();
     }
 
     /**
      * @return                   Returns the generated restriction BDD, in this case its a restriction
-     *                           saying that there should be a queen in each row.
+     *                           saying that there should be a queen in each row and coloumn.
      */
     public BDD generateRestrictionBDD(){
-        // must have one queen at each row:
-        restictionBDD = fact.ithVar(0);
+        BDD rowBDD = fact.ithVar(0);
+        BDD colBDD = fact.ithVar(0);
+        int col = 0;
         for(int i = 1; i < size*size; i++){
-            if(i % size == 0) restictionBDD = restictionBDD.and(fact.ithVar(i));
-            else restictionBDD = restictionBDD.or(fact.ithVar(i));
+            if(i % size == 0) {
+                col++;
+                rowBDD = rowBDD.and(fact.ithVar(i));
+                colBDD = colBDD.and(fact.ithVar((i*size + col) % (size * size)));
+            } else {
+                rowBDD = rowBDD.or(fact.ithVar(i));
+                colBDD = colBDD.or(fact.ithVar((i*size + col) % (size * size)));
+            }
         }
-        return restictionBDD;
+        return rowBDD.and(colBDD);
     }
 
     /**
