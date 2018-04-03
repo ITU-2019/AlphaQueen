@@ -142,22 +142,21 @@ class BDDQueenUtils {
         this.size = size;
         this.fact = JFactory.init(1000000 * size * 2, 100000 * size * 2); // Magic numbers
         fact.setVarNum(size * size); // Need variables for each place on board
-        generaterestrictionBDD();
+        generateRestrictionBDD();
     }
 
-    public void generaterestrictionBDD(){
+    /**
+     * @return                   Returns the generated restriction BDD, in this case its a restriction
+     *                           saying that there should be a queen in each row.
+     */
+    public BDD generateRestrictionBDD(){
         // must have one queen at each row:
         restictionBDD = fact.ithVar(0);
         for(int i = 1; i < size*size; i++){
             if(i % size == 0) restictionBDD = restictionBDD.and(fact.ithVar(i));
             else restictionBDD = restictionBDD.or(fact.ithVar(i));
         }
-        restictionBDD = restictionBDD.and(fact.ithVar(0));
-        for(int i = 1; i < size*size; i++){
-            if(i % size == 0) restictionBDD = restictionBDD.or(fact.ithVar(i));
-            else restictionBDD = restictionBDD.and(fact.ithVar(i));
-        }
-
+        return restictionBDD;
     }
 
     /**
@@ -174,6 +173,7 @@ class BDDQueenUtils {
         }
         if (missingQueens == 0) return true;
         curbdd = placeQueen(varId, curbdd, availablePositions);
+        if (missingQueens > availablePositions.size()) return false;
         if (restictionBDD.restrict(curbdd).isZero()){
             return false;
         }
@@ -181,7 +181,6 @@ class BDDQueenUtils {
         // Check if all queens are placed
 
         // Un-satisfiability if we need to place more queens than there is available positions
-        if (missingQueens > availablePositions.size()) return false;
 
         for (int i : availablePositions) {
             Set<Integer> availablePositionsCopy = new HashSet<>(availablePositions);
