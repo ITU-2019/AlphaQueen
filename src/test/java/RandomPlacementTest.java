@@ -60,12 +60,13 @@ public class RandomPlacementTest{
             testRandomPlacement(8);
         }
     }
-    @Test
+    
+    /*@Test
     public void RandomPlacement9() {
         for(int i = 0; i < 10; i++){
             testRandomPlacement(9);
         }
-    }
+    }*/
 
     
 }

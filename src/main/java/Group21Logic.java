@@ -32,6 +32,7 @@ public class Group21Logic implements IQueensLogic {
         this.numberOfQueens = 0;
         this.board = new int[size][size];
 
+
         // Mark all positions as available.
         this.availablePositions = new HashSet<Integer>();
         for (int i = 0; i < (size * size); i++) {
@@ -131,6 +132,7 @@ public class Group21Logic implements IQueensLogic {
 class BDDQueenUtils {
     private BDDFactory fact;
     private int size;
+    private BDD restictionBDD;
 
     /**
      * Constructor.
@@ -138,8 +140,24 @@ class BDDQueenUtils {
      */
     public BDDQueenUtils(int size){
         this.size = size;
-        this.fact = JFactory.init(1000000, 100000); // Magic numbers
+        this.fact = JFactory.init(1000000 * size * 2, 100000 * size * 2); // Magic numbers
         fact.setVarNum(size * size); // Need variables for each place on board
+        generaterestrictionBDD();
+    }
+
+    public void generaterestrictionBDD(){
+        // must have one queen at each row:
+        restictionBDD = fact.ithVar(0);
+        for(int i = 1; i < size*size; i++){
+            if(i % size == 0) restictionBDD = restictionBDD.and(fact.ithVar(i));
+            else restictionBDD = restictionBDD.or(fact.ithVar(i));
+        }
+        restictionBDD = restictionBDD.and(fact.ithVar(0));
+        for(int i = 1; i < size*size; i++){
+            if(i % size == 0) restictionBDD = restictionBDD.or(fact.ithVar(i));
+            else restictionBDD = restictionBDD.and(fact.ithVar(i));
+        }
+
     }
 
     /**
@@ -151,8 +169,16 @@ class BDDQueenUtils {
      * @return                    Returns true if the game is win-able otherwise return false
      */
     public boolean testInsertQueen(int varId, BDD curbdd, int missingQueens, Set<Integer> availablePositions) {
-        if (missingQueens == 0) return true; // Check if all queens are placed
-        placeQueen(varId, curbdd, availablePositions);
+        if (curbdd == null) {
+            curbdd = fact.ithVar(varId);
+        }
+        if (missingQueens == 0) return true;
+        curbdd = placeQueen(varId, curbdd, availablePositions);
+        if (restictionBDD.restrict(curbdd).isZero()){
+            return false;
+        }
+
+        // Check if all queens are placed
 
         // Un-satisfiability if we need to place more queens than there is available positions
         if (missingQueens > availablePositions.size()) return false;
@@ -180,7 +206,6 @@ class BDDQueenUtils {
         } else {
             curBDD = curBDD.and(fact.ithVar(varId));
         }
-        // Add invalids
         curBDD = placeInvalid(varId, curBDD, availablePositions);
         return curBDD;
     }
