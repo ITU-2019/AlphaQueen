@@ -175,19 +175,21 @@ class BDDQueenUtils {
      * @return                    Returns true if the game is win-able otherwise return false
      */
     public boolean testInsertQueen(int varId, BDD curbdd, int missingQueens, Set<Integer> availablePositions) {
+        // Null check.
         if (curbdd == null) {
             curbdd = fact.ithVar(varId);
         }
+        
+        // Check if all queens are placed
         if (missingQueens == 0) return true;
+
         curbdd = placeQueen(varId, curbdd, availablePositions);
-        if (missingQueens > availablePositions.size()) return false;
         if (restictionBDD.restrict(curbdd).isZero()){
             return false;
         }
-
-        // Check if all queens are placed
-
+        
         // Un-satisfiability if we need to place more queens than there is available positions
+        if (missingQueens > availablePositions.size()) return false;
 
         for (int i : availablePositions) {
             Set<Integer> availablePositionsCopy = new HashSet<>(availablePositions);
